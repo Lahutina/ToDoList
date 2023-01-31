@@ -4,6 +4,7 @@ import com.lahutina.exception.NullEntityReferenceException;
 import com.lahutina.model.State;
 import com.lahutina.repository.StateRepository;
 import com.lahutina.service.StateService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -15,6 +16,7 @@ import java.util.Optional;
 public class StateServiceImpl implements StateService {
     private StateRepository stateRepository;
 
+    @Autowired
     public StateServiceImpl(StateRepository stateRepository) {
         this.stateRepository = stateRepository;
     }
@@ -28,32 +30,27 @@ public class StateServiceImpl implements StateService {
     }
 
     @Override
-    public State readById(long id) {
-        return stateRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("State with id " + id + " not found"));
-    }
-
-    @Override
-    public State update(State role) {
-        if (role != null) {
-            readById(role.getId());
-            return stateRepository.save(role);
-        }
-        throw new NullEntityReferenceException("State cannot be 'null'");
+    public State update(State state) {
+        if (state != null) {
+            return stateRepository.save(state);
+        } else
+            throw new NullEntityReferenceException("State cannot be 'null'");
     }
 
     @Override
     public void delete(long id) {
-        stateRepository.delete(readById(id));
+        Optional<State> stateOptional = stateRepository.findById(id);
+
+        if (stateOptional.isPresent()) {
+            stateRepository.delete(stateOptional.get());
+        } else
+            throw new EntityNotFoundException("State with id " + id + " not found");
     }
 
     @Override
     public State getByName(String name) {
-        Optional<State> optional = Optional.ofNullable(stateRepository.findByName(name));
-        if (optional.isPresent()) {
-            return optional.get();
-        }
-        throw new EntityNotFoundException("State with name '" + name + "' not found");
+        return stateRepository.findByName(name)
+                .orElseThrow(() -> new EntityNotFoundException("State with name '" + name + "' not found"));
     }
 
     @Override
