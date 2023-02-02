@@ -2,9 +2,9 @@ package com.lahutina.service.impl;
 
 import com.lahutina.exception.NullEntityReferenceException;
 import com.lahutina.model.ToDo;
-import com.lahutina.model.User;
 import com.lahutina.repository.ToDoRepository;
 import com.lahutina.service.ToDoService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,14 +14,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class ToDoServiceImpl implements ToDoService {
 
-    private ToDoRepository todoRepository;
-
-    @Autowired
-    public ToDoServiceImpl(ToDoRepository todoRepository) {
-        this.todoRepository = todoRepository;
-    }
+    private final ToDoRepository todoRepository;
 
     @Override
     public ToDo create(ToDo role) {

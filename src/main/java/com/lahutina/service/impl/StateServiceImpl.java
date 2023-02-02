@@ -4,7 +4,7 @@ import com.lahutina.exception.NullEntityReferenceException;
 import com.lahutina.model.State;
 import com.lahutina.repository.StateRepository;
 import com.lahutina.service.StateService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -13,20 +13,17 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class StateServiceImpl implements StateService {
-    private StateRepository stateRepository;
+@RequiredArgsConstructor
 
-    @Autowired
-    public StateServiceImpl(StateRepository stateRepository) {
-        this.stateRepository = stateRepository;
-    }
+public class StateServiceImpl implements StateService {
+    private final StateRepository stateRepository;
 
     @Override
-    public State create(State role) {
-        if (role != null) {
-            return stateRepository.save(role);
-        }
-        throw new NullEntityReferenceException("State cannot be 'null'");
+    public State create(State state) {
+        if (state != null) {
+            return stateRepository.save(state);
+        } else
+            throw new NullEntityReferenceException("State cannot be 'null'");
     }
 
     @Override

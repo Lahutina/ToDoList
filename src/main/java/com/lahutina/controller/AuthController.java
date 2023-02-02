@@ -1,16 +1,15 @@
 package com.lahutina.controller;
 
 import com.lahutina.config.JwtProvider;
-import com.lahutina.dto.OperationResponse;
 import com.lahutina.dto.auth.AuthRequestDto;
 import com.lahutina.dto.auth.AuthResponseDto;
 import com.lahutina.dto.user.UserDto;
-import com.lahutina.dto.user.UserTransformer;
 import com.lahutina.model.User;
 import com.lahutina.service.UserService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
@@ -20,19 +19,16 @@ import javax.validation.Valid;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
-@Slf4j
 public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
-    @Autowired
     private final UserService userService;
+    private final ModelMapper modelMapper;
 
-
-    @PostMapping(value={"/", "/signin"})
+    @PostMapping(value = {"/", "/signin"})
     public AuthResponseDto signIn(@RequestBody @Valid AuthRequestDto authRequest) {
-        User user = userService.findByLogin(authRequest.getLogin());
-        UsernamePasswordAuthenticationToken authenticationToken
-                = new UsernamePasswordAuthenticationToken(
+        User user = userService.findByLoginAndPassword(authRequest);
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 authRequest.getLogin(),
                 authRequest.getPassword()
         );
@@ -41,10 +37,10 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public OperationResponse signUp(@RequestBody UserDto userDto) {
-        User user = userService.saveUser(UserTransformer.convertToEntity(userDto));
-        if(user!=null)
-            return new OperationResponse(String.valueOf(true));
-        else  return new OperationResponse(String.valueOf(false));
+    public ResponseEntity<UserDto> signUp(@RequestBody @Valid UserDto userDto) {
+        User userCreated = userService.create(modelMapper.map(userDto, User.class));
+
+        return userCreated != null ? new ResponseEntity<>(modelMapper.map(userCreated, UserDto.class), HttpStatus.CREATED)
+                : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }

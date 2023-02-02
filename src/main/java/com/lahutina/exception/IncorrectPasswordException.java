@@ -1,2 +1,8 @@
-package com.lahutina.exception;public class IncorrectPasswordWxception {
+package com.lahutina.exception;
+
+public class IncorrectPasswordException extends RuntimeException{
+    public IncorrectPasswordException(String message) {
+        super(message);
+    }
+
 }

@@ -4,7 +4,7 @@ import com.lahutina.exception.NullEntityReferenceException;
 import com.lahutina.model.Role;
 import com.lahutina.repository.RoleRepository;
 import com.lahutina.service.RoleService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -13,13 +13,9 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class RoleServiceImpl implements RoleService {
-    private RoleRepository roleRepository;
-
-    @Autowired
-    public RoleServiceImpl(RoleRepository roleRepository) {
-        this.roleRepository = roleRepository;
-    }
+    private final RoleRepository roleRepository;
 
     @Override
     public Role create(Role role) {
@@ -27,6 +23,12 @@ public class RoleServiceImpl implements RoleService {
             return roleRepository.save(role);
         } else
             throw new NullEntityReferenceException("Role cannot be 'null'");
+    }
+
+    @Override
+    public Role readById(long id) {
+        return roleRepository.findById(id)
+                .orElseThrow(()-> new EntityNotFoundException("Role with id " + id + " not found"));
     }
 
     @Override

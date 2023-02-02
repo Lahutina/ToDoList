@@ -1,8 +1,10 @@
 package com.lahutina.dto.auth;
 
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-@Value
+@Getter
+@AllArgsConstructor
 public class AuthResponseDto {
     String token;
 }

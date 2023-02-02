@@ -1,15 +1,20 @@
 package com.lahutina.model;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
-@Data
 @Entity
 @Table(name = "roles")
+@NoArgsConstructor
+@Getter
+@Setter
 public class Role implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,23 +25,8 @@ public class Role implements GrantedAuthority {
     private String name;
 
     @OneToMany(mappedBy = "role")
+    @JsonIgnore
     private List<User> users;
-
-    public Role(long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
-    public Role() {
-    }
-
-    @Override
-    public String toString() {
-        return "Role {" +
-                "id = " + id +
-                ", name = '" + name + '\'' +
-                "} ";
-    }
 
     @Override
     public String getAuthority() {

@@ -4,7 +4,7 @@ import com.lahutina.exception.NullEntityReferenceException;
 import com.lahutina.model.Task;
 import com.lahutina.repository.TaskRepository;
 import com.lahutina.service.TaskService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -13,18 +13,14 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class TaskServiceImpl implements TaskService {
-    private TaskRepository taskRepository;
-
-    @Autowired
-    public TaskServiceImpl(TaskRepository taskRepository) {
-        this.taskRepository = taskRepository;
-    }
+    private final TaskRepository taskRepository;
 
     @Override
-    public Task create(Task role) {
-        if (role != null) {
-            return taskRepository.save(role);
+    public Task create(Task task) {
+        if (task != null) {
+            return taskRepository.save(task);
         }
         throw new NullEntityReferenceException("Task cannot be 'null'");
     }

@@ -15,18 +15,18 @@ import java.time.LocalDateTime;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
-
-    @ExceptionHandler(NullEntityReferenceException.class)
+    @ExceptionHandler({NullEntityReferenceException.class, IncorrectPasswordException.class })
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ResponseEntity<ApiError> badRequestHandler(Exception exception) {
-        return new ResponseEntity<>(new ApiError(HttpStatus.BAD_REQUEST, LocalDateTime.now(), exception.getMessage()), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ApiError(HttpStatus.BAD_REQUEST, LocalDateTime.now(),
+                exception.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public ResponseEntity<ApiError> notFoundHandler(Exception exception) {
-        return new ResponseEntity<>(new ApiError(HttpStatus.NOT_FOUND, LocalDateTime.now(), exception.getMessage()), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new ApiError(HttpStatus.NOT_FOUND, LocalDateTime.now(),
+                exception.getMessage()), HttpStatus.NOT_FOUND);
 
     }
 

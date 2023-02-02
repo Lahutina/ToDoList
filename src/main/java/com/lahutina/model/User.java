@@ -3,9 +3,13 @@ package com.lahutina.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -13,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -32,13 +36,14 @@ public class User {
     @Column(name = "email", nullable = false, unique = true)
     private String login;
 
-    //    @Pattern(regexp = "(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,}",
-//            message = "Must be minimum 6 characters, at least one letter and one number")
+    @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$",
+            message = "Must be minimum 8 characters, at least one letter, one number and one special symbol")
     @Column(name = "password", nullable = false)
     private String password;
 
     @ManyToOne
     @JoinColumn(name = "role_id")
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.REMOVE)
@@ -50,22 +55,34 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "todo_id"))
     private List<ToDo> otherTodos;
 
-    public User(long id, String login, String password, Role role) {
-        this.id = id;
-        this.login = login;
-        this.password = password;
-        this.role = role;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singleton(role);
     }
 
     @Override
-    public String toString() {
-        return "User {" +
-                "id = " + id +
-                ", firstName = '" + firstName + '\'' +
-                ", lastName = '" + lastName + '\'' +
-                ", email = '" + login + '\'' +
-                ", password = '" + password + '\'' +
-                ", role = " + role +
-                "} ";
+    public String getUsername() {
+        return login;
     }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
 }
