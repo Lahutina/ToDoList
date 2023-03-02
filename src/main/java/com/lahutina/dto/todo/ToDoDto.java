@@ -1,4 +1,4 @@
-package com.lahutina.dto.toDo;
+package com.lahutina.dto.todo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

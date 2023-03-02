@@ -1,6 +1,5 @@
 package com.lahutina.controller;
 
-import com.lahutina.dto.toDo.ToDoDto;
 import com.lahutina.dto.user.UserDto;
 import com.lahutina.model.Role;
 import com.lahutina.model.User;
@@ -13,14 +12,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.persistence.EntityNotFoundException;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @RestController
 @RequiredArgsConstructor

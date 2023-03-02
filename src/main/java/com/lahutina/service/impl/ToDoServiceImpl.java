@@ -5,7 +5,6 @@ import com.lahutina.model.ToDo;
 import com.lahutina.repository.ToDoRepository;
 import com.lahutina.service.ToDoService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;

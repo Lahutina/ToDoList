@@ -1,6 +1,6 @@
 package com.lahutina.controller;
 
-import com.lahutina.dto.toDo.ToDoDto;
+import com.lahutina.dto.todo.ToDoDto;
 import com.lahutina.dto.user.UserDto;
 import com.lahutina.model.ToDo;
 import com.lahutina.model.User;
